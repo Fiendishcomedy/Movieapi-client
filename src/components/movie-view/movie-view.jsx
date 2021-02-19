@@ -1,7 +1,7 @@
 import React from "react";
-import Button from 'react-bootstrap/Button';
+import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
-
+import axios from "axios"
 export class MovieView extends React.Component {
   constructor() {
     super();
@@ -9,8 +9,26 @@ export class MovieView extends React.Component {
     this.state = {};
   }
 
-  refreshPage() {
-    window.location.reload(false);
+  addFavorite(movie) {
+    let token = localStorage.getItem("token");
+    let url =
+      "https://youvegtv.herokuapp.com/users/" +
+      localStorage.getItem("user") +
+      "/movies/" +
+      movie._id;
+
+    console.log(token);
+
+    axios
+      .post(url, "", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        console.log(response);
+        // window.open("/", "_self");
+        window.open("/movies/" + movie._id, "_self");
+        alert("Added to favorites!");
+      });
   }
 
   render() {
@@ -45,6 +63,15 @@ export class MovieView extends React.Component {
         <Link to={`/genres/${movie.Genre.Name}`}>
           <Button variant="link">Genre</Button>
         </Link>
+        <div>
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => this.addFavorite(movie)}
+          >
+            Add to Favorites
+          </Button>
+        </div>
       </div>
     );
   }

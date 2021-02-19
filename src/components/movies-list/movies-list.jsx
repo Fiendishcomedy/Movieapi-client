@@ -4,6 +4,34 @@ import { connect } from 'react-redux';
 import VisibilityFilterInput from '../visibility-filter-input/visibility-filter-input';
 import { MovieCard } from '../movie-card/movie-card';
 
+constructor() {
+  super();
+
+  this.state = {};
+}
+
+addFavorite(movie) {
+  let token = localStorage.getItem("token");
+  let url =
+    "https://flixnet-2020.herokuapp.com/users/" +
+    localStorage.getItem("user") +
+    "/favorites/" +
+    movie._id;
+
+  console.log(token);
+
+  axios
+    .post(url, "", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => {
+      console.log(response);
+      // window.open("/", "_self");
+      window.open("/movies/" + movie._id, "_self");
+      alert("Added to favorites!");
+    });
+}
+
 const mapStateToProps = state => {
   const { visibilityFilter } = state;
   return { visibilityFilter };

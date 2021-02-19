@@ -39,8 +39,7 @@ export class ProfileView extends React.Component {
   getUser(token) {
     //console.log(localStorage.getItem("user"));
     let url =
-      "https://youvegtv.herokuapp.com/users/" +
-      localStorage.getItem("user");
+      "https://youvegtv.herokuapp.com/users/" + localStorage.getItem("user");
     axios
       .get(url, {
         headers: { Authorization: `Bearer ${token}` },
@@ -57,30 +56,30 @@ export class ProfileView extends React.Component {
       });
   }
 
-//   removeFavorite(movie) {
-//     let token = localStorage.getItem("token");
-//     let url =
-//       "https://youvegtv.herokuapp.com/users/" +
-//       localStorage.getItem("user") +
-//       "/favorites/" +
-//       movie._id;
-//     axios
-//       .delete(url, {
-//         headers: { Authorization: `Bearer ${token}` },
-//       })
-//       .then((response) => {
-//         console.log(response);
-//         this.componentDidMount();
-//       });
-//   }
-
-    handleDelete() {
-        let token = localStorage.getItem("token");
-        let user = localStorage.getItem("user");
+  removeFavorite(movie) {
+    let token = localStorage.getItem("token");
+    let url =
+      "https://youvegtv.herokuapp.com/users/" +
+      localStorage.getItem("user") +
+      "/movies/" +
+      movie._id;
     axios
-      .delete(
-        "https://youvegtv.herokuapp.com/users/"+user, { headers: { Authorization: `Bearer ${token}` } }
-      )
+      .delete(url, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        console.log(response);
+        this.componentDidMount();
+      });
+  }
+
+  handleDelete() {
+    let token = localStorage.getItem("token");
+    let user = localStorage.getItem("user");
+    axios
+      .delete("https://youvegtv.herokuapp.com/users/" + user, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then(() => {
         alert(user + " has been deleted");
         localStorage.removeItem("user");
@@ -95,9 +94,9 @@ export class ProfileView extends React.Component {
   render() {
     const { movies } = this.props;
     // this.getUser(localStorage.getItem("token"));
-    // const favoriteMovieList = movies.filter((movie) => {
-    //   return this.state.favoriteMovies.includes(movie._id);
-    // });
+    const favoriteMovieList = movies.filter((movie) => {
+      return this.state.favoriteMovies.includes(movie._id);
+    });
     // console.log(favoriteMovieList);
 
     if (!movies) alert("Please sign in");
@@ -120,35 +119,27 @@ export class ProfileView extends React.Component {
                   <h3>Date of Birth:</h3>
                   <Form.Label>{this.state.dob}</Form.Label>
                 </Form.Group>
-                  <Link to={`/update/${this.state.username}`}>
-                    <Button variant="outline-dark" 
-                            type="link"
-                            size="sm" 
-                            block
-                    >
-                      Edit Profile
-                    </Button>
-                  </Link>
+                <Link to={`/update/${this.state.username}`}>
+                  <Button variant="outline-dark" type="link" size="sm" block>
+                    Edit Profile
+                  </Button>
+                </Link>
                 <Link to={`/`}>
-                  <Button variant="outline-dark" 
-                          type="submit"
-                          size="sm"
-                          block
-                  >
+                  <Button variant="outline-dark" type="submit" size="sm" block>
                     Back to Main
                   </Button>
                 </Link>
-                <Button variant="outline-danger" 
-                        size="sm"
-                        block
-                        onClick={() => this.handleDelete()}
+                <Button
+                  variant="outline-danger"
+                  size="sm"
+                  block
+                  onClick={() => this.handleDelete()}
                 >
                   Delete Account
                 </Button>
-                
               </Form>
             </Col>
-            {/* <Col>
+            <Col>
               <div
                 className="favoriteMovies"
                 style={{
@@ -162,6 +153,7 @@ export class ProfileView extends React.Component {
                   return (
                     <div key={movie._id}>
                       <Card>
+                      <Card.Img variant="top" src={movie.ImagePath} />
                         <Card.Body>
                           <Link to={`/movies/${movie._id}`}>
                             <Card.Title>{movie.Title}</Card.Title>
@@ -175,7 +167,7 @@ export class ProfileView extends React.Component {
                   );
                 })}
               </div>
-            </Col> */}
+            </Col>
           </Row>
         </Container>
       </div>
